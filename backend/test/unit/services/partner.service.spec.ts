@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PartnerService } from '../src/application/services/partner.service';
-import { IUserRepository, USER_REPOSITORY } from '../src/core/repositories/user.repository';
-import { ISaleRepository, SALE_REPOSITORY } from '../src/core/repositories/sale.repository';
+import { PartnerService } from '../../../src/application/services/partner.service';
+import { IUserRepository, USER_REPOSITORY } from '../../../src/core/repositories/user.repository';
+import { ISaleRepository, SALE_REPOSITORY } from '../../../src/core/repositories/sale.repository';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
-import { UserRole } from '../src/core/enums/user-role.enum';
-import { UserEntity } from '../src/core/entities/user.entity';
-import { SaleEntity } from '../src/core/entities/sale.entity';
+import { UserRole } from '../../../src/core/enums/user-role.enum';
+import { UserEntity } from '../../../src/core/entities/user.entity';
+import { SaleEntity } from '../../../src/core/entities/sale.entity';
 
 describe('PartnerService', () => {
   let service: PartnerService;

@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from '../src/application/services/user.service';
-import { IUserRepository, USER_REPOSITORY } from '../src/core/repositories/user.repository';
+import { UserService } from '../../../src/application/services/user.service';
+import { IUserRepository, USER_REPOSITORY } from '../../../src/core/repositories/user.repository';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { UserEntity } from '../src/core/entities/user.entity';
-import { UserRole } from '../src/core/enums/user-role.enum';
+import { UserEntity } from '../../../src/core/entities/user.entity';
+import { UserRole } from '../../../src/core/enums/user-role.enum';
 
 describe('UserService', () => {
   let service: UserService;
