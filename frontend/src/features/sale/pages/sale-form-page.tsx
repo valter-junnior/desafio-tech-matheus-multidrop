@@ -35,10 +35,8 @@ export function SaleFormPage() {
   const navigate = useNavigate();
   const createSale = useCreateSale();
   const { data: products } = useProducts();
-  const { data: users } = useUsers();
-
-  const partners = users?.filter((user) => user.role === "PARTNER");
-  const customers = users?.filter((user) => user.role === "CUSTOMER");
+  const { data: partners } = useUsers("PARTNER");
+  const { data: customers } = useUsers("CUSTOMER");
 
   const {
     register,

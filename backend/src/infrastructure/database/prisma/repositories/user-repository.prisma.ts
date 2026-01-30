@@ -6,6 +6,7 @@ import { IUserRepository } from '../../../../core/repositories/user.repository';
 import { UserPersistence } from '../models/user/user-persistence.type';
 import { CreateUserDto } from '../../../../application/dtos/user/create-user.dto';
 import { User } from '../prisma';
+import { UserRole } from '../../../../core/enums/user-role.enum';
 
 @Injectable()
 export class UserRepositoryPrisma implements IUserRepository {
@@ -18,10 +19,11 @@ export class UserRepositoryPrisma implements IUserRepository {
     return UserMapper.toDomain(this.mapPrismaToPersistence(user));
   }
 
-  async findAll(skip: number = 0, take: number = 10): Promise<UserEntity[]> {
+  async findAll(skip: number = 0, take: number = 10, role?: UserRole): Promise<UserEntity[]> {
     const users = await this.prisma.user.findMany({
       skip,
       take,
+      where: role ? { role } : undefined,
       orderBy: {
         createdAt: 'desc',
       },
@@ -45,8 +47,10 @@ export class UserRepositoryPrisma implements IUserRepository {
     return user ? UserMapper.toDomain(this.mapPrismaToPersistence(user)) : null;
   }
 
-  async count(): Promise<number> {
-    return this.prisma.user.count();
+  async count(role?: UserRole): Promise<number> {
+    return this.prisma.user.count({
+      where: role ? { role } : undefined,
+    });
   }
 
   private mapPrismaToPersistence(prismaUser: User): UserPersistence {

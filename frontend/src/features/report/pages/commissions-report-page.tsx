@@ -19,15 +19,12 @@ export function CommissionsReportPage() {
   const [selectedPartnerId, setSelectedPartnerId] = useState<number | null>(
     null,
   );
-  const { data: users, isLoading: isLoadingUsers } = useUsers();
+  const { data: partners, isLoading: isLoadingUsers } = useUsers("PARTNER");
   const {
     data: commissionReport,
     isLoading,
     error,
   } = usePartnerCommissions(selectedPartnerId!);
-
-  // Filtrar apenas usuários com role PARTNER
-  const partners = users?.filter((user) => user.role === "PARTNER") || [];
 
   if (isLoadingUsers) {
     return (
@@ -57,8 +54,8 @@ export function CommissionsReportPage() {
                   <SelectValue placeholder="Escolha um parceiro" />
                 </SelectTrigger>
                 <SelectContent>
-                  {partners.map((partner) => (
-                    <SelectItem key={partner.id} value={partner.id}>
+                  {partners?.map((partner) => (
+                    <SelectItem key={partner.id} value={partner.id.toString()}>
                       {partner.name}
                     </SelectItem>
                   ))}

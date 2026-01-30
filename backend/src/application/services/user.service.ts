@@ -3,6 +3,7 @@ import { CreateUserDto } from '../dtos/user/create-user.dto';
 import type { IUserRepository } from '../../core/repositories/user.repository';
 import { USER_REPOSITORY } from '../../core/repositories/user.repository';
 import { UserEntity } from '../../core/entities/user.entity';
+import { UserRole } from '../../core/enums/user-role.enum';
 
 @Injectable()
 export class UserService {
@@ -20,7 +21,7 @@ export class UserService {
     return await this.userRepository.create(createUserDto);
   }
 
-  async findAll(page: number = 1, limit: number = 10): Promise<{
+  async findAll(page: number = 1, limit: number = 10, role?: UserRole): Promise<{
     data: UserEntity[];
     total: number;
     page: number;
@@ -29,8 +30,8 @@ export class UserService {
   }> {
     const skip = (page - 1) * limit;
     const [users, total] = await Promise.all([
-      this.userRepository.findAll(skip, limit),
-      this.userRepository.count(),
+      this.userRepository.findAll(skip, limit, role),
+      this.userRepository.count(role),
     ]);
 
     return {

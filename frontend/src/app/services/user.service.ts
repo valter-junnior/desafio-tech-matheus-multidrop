@@ -30,8 +30,11 @@ interface PaginatedResponse<T> {
 }
 
 export const userService = {
-  getAll: async (): Promise<User[]> => {
-    const response = await apiClient.get<PaginatedResponse<User>>("/users");
+  getAll: async (role?: string): Promise<User[]> => {
+    const params = role ? { role } : {};
+    const response = await apiClient.get<PaginatedResponse<User>>("/users", {
+      params,
+    });
     return response.data.data;
   },
 

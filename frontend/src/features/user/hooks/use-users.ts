@@ -5,10 +5,10 @@ import {
   type UpdateUserDto,
 } from "../../../app/services/user.service";
 
-export function useUsers() {
+export function useUsers(role?: string) {
   return useQuery({
-    queryKey: ["users"],
-    queryFn: userService.getAll,
+    queryKey: ["users", role],
+    queryFn: () => userService.getAll(role),
   });
 }
 
