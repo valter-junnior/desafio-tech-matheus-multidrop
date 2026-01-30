@@ -4,7 +4,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
-  commission: number;
+  active: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -12,13 +12,13 @@ export interface Product {
 export interface CreateProductDto {
   name: string;
   price: number;
-  commission: number;
+  active: boolean;
 }
 
 export interface UpdateProductDto {
   name?: string;
   price?: number;
-  commission?: number;
+  active?: boolean;
 }
 
 interface PaginatedResponse<T> {

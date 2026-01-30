@@ -44,14 +44,8 @@ export function SaleFormPage() {
     setValue,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<SaleFormData>({
     resolver: zodResolver(saleSchema),
-    defaultValues: {
-      productId: "",
-      partnerId: "",
-      customerId: "",
-      quantity: 1,
-    },
     mode: "onChange",
   });
 
@@ -82,7 +76,9 @@ export function SaleFormPage() {
               </Label>
               <Select
                 value={selectedProductId}
-                onValueChange={(value) => setValue("productId", value)}
+                onValueChange={(value) =>
+                  setValue("productId", value, { shouldValidate: true })
+                }
               >
                 <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um produto" />
@@ -112,7 +108,9 @@ export function SaleFormPage() {
               </Label>
               <Select
                 value={selectedPartnerId}
-                onValueChange={(value) => setValue("partnerId", value)}
+                onValueChange={(value) =>
+                  setValue("partnerId", value, { shouldValidate: true })
+                }
               >
                 <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um parceiro" />
@@ -138,7 +136,9 @@ export function SaleFormPage() {
               </Label>
               <Select
                 value={selectedCustomerId}
-                onValueChange={(value) => setValue("customerId", value)}
+                onValueChange={(value) =>
+                  setValue("customerId", value, { shouldValidate: true })
+                }
               >
                 <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um cliente" />

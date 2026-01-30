@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useProducts, useDeleteProduct } from "../hooks/use-products";
 import { Button } from "../../../shared/components/ui/button";
+import { Badge } from "../../../shared/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -66,7 +67,7 @@ export function ProductsListPage() {
               <TableRow>
                 <TableHead>Nome</TableHead>
                 <TableHead>Preço</TableHead>
-                <TableHead>Comissão</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Data de Criação</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
@@ -81,7 +82,11 @@ export function ProductsListPage() {
                       currency: "BRL",
                     }).format(product.price)}
                   </TableCell>
-                  <TableCell>{product.commission}%</TableCell>
+                  <TableCell>
+                    <Badge variant={product.active ? "default" : "secondary"}>
+                      {product.active ? "Ativo" : "Inativo"}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     {new Date(product.createdAt).toLocaleDateString("pt-BR")}
                   </TableCell>

@@ -10,6 +10,7 @@ import {
 import { Button } from "../../../shared/components/ui/button";
 import { Input } from "../../../shared/components/ui/input";
 import { Label } from "../../../shared/components/ui/label";
+import { Switch } from "../../../shared/components/ui/switch";
 import {
   Card,
   CardContent,
@@ -21,10 +22,7 @@ import { useEffect } from "react";
 const productSchema = z.object({
   name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
   price: z.coerce.number().min(0.01, "Preço deve ser maior que 0"),
-  commission: z.coerce
-    .number()
-    .min(0, "Comissão não pode ser negativa")
-    .max(100, "Comissão não pode ser maior que 100"),
+  active: z.boolean().default(true),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -42,13 +40,14 @@ export function ProductFormPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
       price: 0,
-      commission: 0,
+      active: true,
     },
     mode: "onChange",
   });
@@ -57,7 +56,7 @@ export function ProductFormPage() {
     if (product) {
       setValue("name", product.name);
       setValue("price", product.price);
-      setValue("commission", product.commission);
+      setValue("active", product.active);
     }
   }, [product, setValue]);
 
@@ -114,22 +113,20 @@ export function ProductFormPage() {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="commission" className="text-sm font-medium">
-                Comissão (%)
-              </Label>
-              <Input
-                id="commission"
-                type="number"
-                step="0.01"
-                {...register("commission", { valueAsNumber: true })}
-                className="h-10"
-              />
-              {errors.commission && (
-                <p className="text-sm text-red-600 mt-1.5">
-                  {errors.commission.message}
+            <div className="flex items-center justify-between space-y-2">
+              <div className="space-y-0.5">
+                <Label htmlFor="active" className="text-sm font-medium">
+                  Produto Ativo
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Desative para tornar o produto indisponível para vendas
                 </p>
-              )}
+              </div>
+              <Switch
+                id="active"
+                checked={watch("active")}
+                onCheckedChange={(checked) => setValue("active", checked)}
+              />
             </div>
 
             <div className="flex gap-3 justify-end pt-4">
