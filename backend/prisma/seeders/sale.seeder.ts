@@ -1,4 +1,4 @@
-import { PrismaClient, Sale } from 'generated/prisma/client';
+import { PrismaClient, Sale } from 'src/generated/prisma/client';
 
 interface SaleSeederData {
   products: Array<{ id: number; price: number }>;

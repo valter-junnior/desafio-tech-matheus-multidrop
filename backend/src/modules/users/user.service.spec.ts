@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { UserRole } from 'generated/prisma/client';
+import { UserRole } from 'src/generated/prisma/client';
 
 describe('UserService', () => {
   let service: UserService;

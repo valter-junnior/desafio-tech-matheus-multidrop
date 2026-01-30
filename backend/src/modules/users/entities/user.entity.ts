@@ -1,4 +1,4 @@
-import { UserRole } from 'generated/prisma/client';
+import { UserRole } from 'src/generated/prisma/client';
 
 export class UserEntity {
   private _id: number;

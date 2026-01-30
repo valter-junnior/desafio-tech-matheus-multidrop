@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from 'generated/prisma/client';
+import { PrismaClient, UserRole } from 'src/generated/prisma/client';
 
 export async function seedUsers(prisma: PrismaClient) {
   console.log('🌱 Seeding users...');

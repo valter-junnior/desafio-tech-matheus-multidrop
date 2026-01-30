@@ -1,4 +1,4 @@
-import { Sale, Product, User } from 'generated/prisma/client';
+import { Sale, Product, User } from 'src/generated/prisma/client';
 import { SaleEntity } from '../entities/sale.entity';
 import { ProductMapper } from '../../products/mappers/product.mapper';
 import { UserMapper } from '../../users/mappers/user.mapper';
