@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import { CommissionResponseDto } from './dto/commission-response.dto';
-import { UserRole } from '../users/domain/enums/user-role.enum';
-import type { IUserRepository } from '../users/domain/interfaces/user-repository.interface';
-import { USER_REPOSITORY } from '../users/domain/interfaces/user-repository.interface';
+import { UserRole } from '../../core/enums/user-role.enum';
+import type { IUserRepository } from '../../core/repositories/user.repository';
+import { USER_REPOSITORY } from '../../core/repositories/user.repository';
 import type { ISaleRepository } from '../sales/domain/interfaces/sale-repository.interface';
 import { SALE_REPOSITORY } from '../sales/domain/interfaces/sale-repository.interface';
 

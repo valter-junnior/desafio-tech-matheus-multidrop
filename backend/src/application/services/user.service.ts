@@ -1,14 +1,9 @@
 import { Injectable, ConflictException, NotFoundException, Inject } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
-import type { IUserRepository } from './domain/interfaces/user-repository.interface';
-import { USER_REPOSITORY } from './domain/interfaces/user-repository.interface';
+import { CreateUserDto } from '../dtos/user/create-user.dto';
+import type { IUserRepository } from '../../core/repositories/user.repository';
+import { USER_REPOSITORY } from '../../core/repositories/user.repository';
+import { UserEntity } from '../../core/entities/user.entity';
 
-/**
- * Service de usuários - Camada de aplicação
- * Orquestra as operações usando a interface do repositório
- * Não depende de implementações concretas (DIP)
- */
 @Injectable()
 export class UserService {
   constructor(
@@ -16,19 +11,17 @@ export class UserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    // Verifica se email já existe
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const existingUser = await this.userRepository.findByEmail(createUserDto.email);
     if (existingUser) {
       throw new ConflictException('Email já cadastrado');
     }
 
-    const user = await this.userRepository.create(createUserDto);
-    return new UserResponseDto(user);
+    return await this.userRepository.create(createUserDto);
   }
 
   async findAll(page: number = 1, limit: number = 10): Promise<{
-    data: UserResponseDto[];
+    data: UserEntity[];
     total: number;
     page: number;
     limit: number;
@@ -41,7 +34,7 @@ export class UserService {
     ]);
 
     return {
-      data: users.map((user) => new UserResponseDto(user)),
+      data: users,
       total,
       page,
       limit,
@@ -49,11 +42,11 @@ export class UserService {
     };
   }
 
-  async findById(id: number): Promise<UserResponseDto> {
+  async findById(id: number): Promise<UserEntity> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
-    return new UserResponseDto(user);
+    return user;
   }
 }

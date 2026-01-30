@@ -1,5 +1,5 @@
 import type { ProductEntity } from '../entities/product.entity';
-import type { CreateProductDto } from '../../application/dtos/create-product.dto';
+import type { CreateProductDto } from '../../application/dtos/product/create-product.dto';
 
 export interface IProductRepository {
   create(data: CreateProductDto): Promise<ProductEntity>;
@@ -8,7 +8,4 @@ export interface IProductRepository {
   count(): Promise<number>;
 }
 
-/**
- * Token de injeção de dependência para o repository
- */
 export const PRODUCT_REPOSITORY = Symbol('IProductRepository');

@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ProductEntity } from '../../../../core/entities/product.entity';
 import { IProductRepository } from '../../../../core/repositories/product.repository';
-import { ProductMapper } from '../models/product.mapper';
-import { CreateProductDto } from 'src/application/dtos/create-product.dto';
-import { ProductPersistence } from '../models/product-persistence.type';
+import { CreateProductDto } from 'src/application/dtos/product/create-product.dto';
+import { ProductPersistence } from '../models/product/product-persistence.type';
 import { Product } from '../prisma';
+import { ProductMapper } from '../models/product/product.mapper';
 
 @Injectable()
 export class ProductRepositoryPrisma implements IProductRepository {

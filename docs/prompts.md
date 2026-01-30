@@ -1,3 +1,3 @@
-eu refatorei o src da minha aplicação e agora eu quero migrar os antigos domains dentro de modules cada um separadamente um a um começando por products quero que migre os antigos arquivos para suas respectivas novas camadas eu ja fiz o inicio que foi o product.repository.ts que foi para o core/repositories mas falta migrar a parte do infra dele que tem que ir para dentro de infrastrucure/database/prisma/repositories e isso tambem serve para o type/mappers que tem que ir para o models dentro da pasta do database/prisma, seguindo as alteracoes temos o dto que tem tanto o dto da aplication que é usado no service quanto os requests onde temos que usar a validacao do class-validator e os presenters do controller e por fim tempos o controllers e service que devem ser migrados tambem alem disso tambem tem o entities e exceptions caso exista
+utilizando agora o products como base que ja foi migrado para a estrutura de application, core e infra migre o /users para lá também seguindo como exemplo e refatorando/criando os arquivos necessário para a arquitetura
 
-use o nvm use 24
+use o `nvm use 24` para o node

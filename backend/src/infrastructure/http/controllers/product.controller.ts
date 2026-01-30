@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Query, Param, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam } from '@nestjs/swagger';
-import { CreateProductRequest } from '../requests/create-product.request';
+import { CreateProductRequest } from '../requests/product/create-product.request';
 import { ProductPresenter } from '../presenters/product.presenter';
 import { ProductService } from 'src/application/services/product.service';
 

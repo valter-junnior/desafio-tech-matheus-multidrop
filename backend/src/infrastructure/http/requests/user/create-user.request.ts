@@ -1,8 +1,12 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '../../../infrastructure/database/prisma/generated';
+import { UserRole } from '../../../../core/enums/user-role.enum';
 
-export class CreateUserDto {
+/**
+ * Request DTO para criação de usuário - Camada de infraestrutura HTTP
+ * Usado nos controllers com validação
+ */
+export class CreateUserRequest {
   @ApiProperty({ 
     description: 'Nome completo do usuário',
     example: 'João Silva'

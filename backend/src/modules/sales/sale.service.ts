@@ -3,8 +3,8 @@ import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleResponseDto, SaleDetailResponseDto } from './dto/sale-response.dto';
 import type { ISaleRepository } from './domain/interfaces/sale-repository.interface';
 import { SALE_REPOSITORY } from './domain/interfaces/sale-repository.interface';
-import type { IUserRepository } from '../users/domain/interfaces/user-repository.interface';
-import { USER_REPOSITORY } from '../users/domain/interfaces/user-repository.interface';
+import type { IUserRepository } from '../../core/repositories/user.repository';
+import { USER_REPOSITORY } from '../../core/repositories/user.repository';
 import type { IProductRepository } from '../../core/repositories/product.repository';
 import { PRODUCT_REPOSITORY } from '../../core/repositories/product.repository';
 

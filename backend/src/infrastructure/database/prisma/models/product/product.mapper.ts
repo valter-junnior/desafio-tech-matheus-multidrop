@@ -1,4 +1,4 @@
-import { ProductEntity } from '../../../../core/entities/product.entity';
+import { ProductEntity } from 'src/core/entities/product.entity';
 import {
   ProductPersistence,
   CreateProductPersistence,

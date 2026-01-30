@@ -4,7 +4,7 @@ import {
   CreateSalePersistence,
 } from '../infrastructure/types/sale-persistence.type';
 import { ProductMapper } from '../../../infrastructure/database/prisma/models/product.mapper';
-import { UserMapper } from '../../users/mappers/user.mapper';
+import { UserMapper } from '../../../infrastructure/database/prisma/models/user/user.mapper';
 
 /**
  * Mapper para conversão entre camada de domínio e persistência

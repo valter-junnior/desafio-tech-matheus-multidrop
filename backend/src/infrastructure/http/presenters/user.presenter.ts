@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '../../../infrastructure/database/prisma/generated';
-import { Exclude } from 'class-transformer';
-import { UserEntity } from '../entities/user.entity';
+import { UserRole } from '../../../core/enums/user-role.enum';
+import { UserEntity } from '../../../core/entities/user.entity';
 
-export class UserResponseDto {
+/**
+ * Presenter para resposta de usuário - Camada de infraestrutura HTTP
+ * Usado nos controllers para formatar a resposta
+ */
+export class UserPresenter {
   @ApiProperty({ description: 'ID do usuário', example: 1 })
   id: number;
 
@@ -19,7 +22,7 @@ export class UserResponseDto {
   @ApiProperty({ description: 'Data de criação', example: '2024-01-15T10:30:00.000Z' })
   createdAt: Date;
 
-  constructor(partial: Partial<UserResponseDto> | UserEntity) {
+  constructor(partial: Partial<UserPresenter> | UserEntity) {
     if (partial instanceof UserEntity) {
       Object.assign(this, partial.toObject());
     } else {

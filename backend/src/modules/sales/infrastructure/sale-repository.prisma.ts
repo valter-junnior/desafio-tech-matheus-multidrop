@@ -6,8 +6,8 @@ import { SaleMapper } from '../mappers/sale.mapper';
 import { ISaleRepository } from '../domain/interfaces/sale-repository.interface';
 import { Sale, Product, User } from '../../../infrastructure/database/prisma/generated';
 import { SalePersistenceWithRelations } from './types/sale-persistence.type';
-import { ProductPersistence } from '../../../infrastructure/database/prisma/models/product-persistence.type';
-import { UserPersistence } from '../../users/infrastructure/types/user-persistence.type';
+import { ProductPersistence } from '../../../infrastructure/database/prisma/models/product/product-persistence.type';
+import { UserPersistence } from '../../../infrastructure/database/prisma/models/user/user-persistence.type';
 
 type PrismaSaleWithRelations = Sale & {
   product?: Product;

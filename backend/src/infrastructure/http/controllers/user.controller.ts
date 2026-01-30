@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Query, Param, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { CreateUserRequest } from '../requests/user/create-user.request';
+import { UserPresenter } from '../presenters/user.presenter';
+import { UserService } from 'src/application/services/user.service';
 
 @ApiTags('users')
 @Controller('users')
@@ -11,14 +11,15 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Criar novo usuário' })
-  @ApiResponse({ status: 201, description: 'Usuário criado com sucesso', type: UserResponseDto })
+  @ApiResponse({ status: 201, description: 'Usuário criado com sucesso', type: UserPresenter })
   @ApiResponse({ status: 400, description: 'Dados inválidos' })
   @ApiResponse({ status: 409, description: 'Email já cadastrado' })
   async create(
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-    createUserDto: CreateUserDto,
-  ): Promise<UserResponseDto> {
-    return this.userService.create(createUserDto);
+    createUserRequest: CreateUserRequest,
+  ): Promise<UserPresenter> {
+    const user = await this.userService.create(createUserRequest);
+    return new UserPresenter(user);
   }
 
   @Get()
@@ -30,7 +31,7 @@ export class UserController {
     @Query('page') page?: string,
     @Query('limit') limit?: string,
   ): Promise<{
-    data: UserResponseDto[];
+    data: UserPresenter[];
     total: number;
     page: number;
     limit: number;
@@ -38,15 +39,21 @@ export class UserController {
   }> {
     const pageNumber = page ? parseInt(page, 10) : 1;
     const limitNumber = limit ? parseInt(limit, 10) : 10;
-    return this.userService.findAll(pageNumber, limitNumber);
+    const result = await this.userService.findAll(pageNumber, limitNumber);
+    
+    return {
+      ...result,
+      data: result.data.map((user) => new UserPresenter(user)),
+    };
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Buscar usuário por ID' })
   @ApiParam({ name: 'id', type: Number, description: 'ID do usuário' })
-  @ApiResponse({ status: 200, description: 'Usuário encontrado', type: UserResponseDto })
+  @ApiResponse({ status: 200, description: 'Usuário encontrado', type: UserPresenter })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
-    return this.userService.findById(id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserPresenter> {
+    const user = await this.userService.findById(id);
+    return new UserPresenter(user);
   }
 }

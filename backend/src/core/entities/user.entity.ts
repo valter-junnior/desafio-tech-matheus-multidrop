@@ -1,10 +1,5 @@
-import { UserRole } from '../domain/enums/user-role.enum';
+import { UserRole } from '../enums/user-role.enum';
 
-/**
- * Entidade de domínio User
- * Encapsula as regras de negócio relacionadas a usuários
- * Não depende de frameworks ou infraestrutura
- */
 export class UserEntity {
   private _id: number;
   private _name: string;

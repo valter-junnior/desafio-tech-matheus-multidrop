@@ -1,18 +1,11 @@
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from '../../../../../core/entities/user.entity';
 import {
   UserPersistence,
   CreateUserPersistence,
-} from '../infrastructure/types/user-persistence.type';
+} from './user-persistence.type';
 
-/**
- * Mapper para conversão entre camada de domínio e persistência
- * Isola a lógica de transformação e garante que a camada de domínio
- * não dependa diretamente do Prisma
- */
 export class UserMapper {
-  /**
-   * Converte dados de persistência para entidade de domínio
-   */
+
   static toDomain(persistence: UserPersistence): UserEntity {
     return new UserEntity(
       persistence.id,
@@ -23,9 +16,6 @@ export class UserMapper {
     );
   }
 
-  /**
-   * Converte entidade de domínio para dados de persistência
-   */
   static toPersistence(entity: UserEntity): CreateUserPersistence {
     return {
       name: entity.name,
@@ -34,9 +24,6 @@ export class UserMapper {
     };
   }
 
-  /**
-   * Converte array de dados de persistência para array de entidades de domínio
-   */
   static toDomainArray(persistenceArray: UserPersistence[]): UserEntity[] {
     return persistenceArray.map((persistence) => this.toDomain(persistence));
   }
