@@ -71,20 +71,22 @@ export function SaleFormPage() {
   };
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-8 px-4">
       <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Nova Venda</CardTitle>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Nova Venda</CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <Label htmlFor="productId">Produto</Label>
+        <CardContent className="px-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="productId" className="text-sm font-medium">
+                Produto
+              </Label>
               <Select
                 value={selectedProductId}
                 onValueChange={(value) => setValue("productId", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um produto" />
                 </SelectTrigger>
                 <SelectContent>
@@ -100,19 +102,21 @@ export function SaleFormPage() {
                 </SelectContent>
               </Select>
               {errors.productId && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.productId.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="partnerId">Parceiro</Label>
+            <div className="space-y-2">
+              <Label htmlFor="partnerId" className="text-sm font-medium">
+                Parceiro
+              </Label>
               <Select
                 value={selectedPartnerId}
                 onValueChange={(value) => setValue("partnerId", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um parceiro" />
                 </SelectTrigger>
                 <SelectContent>
@@ -124,19 +128,21 @@ export function SaleFormPage() {
                 </SelectContent>
               </Select>
               {errors.partnerId && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.partnerId.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="customerId">Cliente</Label>
+            <div className="space-y-2">
+              <Label htmlFor="customerId" className="text-sm font-medium">
+                Cliente
+              </Label>
               <Select
                 value={selectedCustomerId}
                 onValueChange={(value) => setValue("customerId", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um cliente" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,36 +154,42 @@ export function SaleFormPage() {
                 </SelectContent>
               </Select>
               {errors.customerId && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.customerId.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="quantity">Quantidade</Label>
+            <div className="space-y-2">
+              <Label htmlFor="quantity" className="text-sm font-medium">
+                Quantidade
+              </Label>
               <Input
                 id="quantity"
                 type="number"
                 min="1"
                 {...register("quantity", { valueAsNumber: true })}
+                className="h-10"
               />
               {errors.quantity && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.quantity.message}
                 </p>
               )}
             </div>
 
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-3 justify-end pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => navigate("/sales")}
+                className="min-w-[100px]"
               >
                 Cancelar
               </Button>
-              <Button type="submit">Criar Venda</Button>
+              <Button type="submit" className="min-w-[100px]">
+                Criar Venda
+              </Button>
             </div>
           </form>
         </CardContent>

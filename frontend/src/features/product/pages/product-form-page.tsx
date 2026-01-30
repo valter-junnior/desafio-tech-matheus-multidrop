@@ -75,62 +75,75 @@ export function ProductFormPage() {
   };
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-8 px-4">
       <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>{isEditing ? "Editar Produto" : "Novo Produto"}</CardTitle>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">
+            {isEditing ? "Editar Produto" : "Novo Produto"}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Nome</Label>
-              <Input id="name" {...register("name")} />
+        <CardContent className="px-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Nome
+              </Label>
+              <Input id="name" {...register("name")} className="h-10" />
               {errors.name && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.name.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="price">Preço (R$)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="price" className="text-sm font-medium">
+                Preço (R$)
+              </Label>
               <Input
                 id="price"
                 type="number"
                 step="0.01"
                 {...register("price", { valueAsNumber: true })}
+                className="h-10"
               />
               {errors.price && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.price.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="commission">Comissão (%)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="commission" className="text-sm font-medium">
+                Comissão (%)
+              </Label>
               <Input
                 id="commission"
                 type="number"
                 step="0.01"
                 {...register("commission", { valueAsNumber: true })}
+                className="h-10"
               />
               {errors.commission && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.commission.message}
                 </p>
               )}
             </div>
 
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-3 justify-end pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => navigate("/products")}
+                className="min-w-[100px]"
               >
                 Cancelar
               </Button>
-              <Button type="submit">{isEditing ? "Atualizar" : "Criar"}</Button>
+              <Button type="submit" className="min-w-[100px]">
+                {isEditing ? "Atualizar" : "Criar"}
+              </Button>
             </div>
           </form>
         </CardContent>

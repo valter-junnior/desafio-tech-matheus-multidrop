@@ -80,40 +80,53 @@ export function UserFormPage() {
   };
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-8 px-4">
       <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>{isEditing ? "Editar Usuário" : "Novo Usuário"}</CardTitle>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">
+            {isEditing ? "Editar Usuário" : "Novo Usuário"}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Nome</Label>
-              <Input id="name" {...register("name")} />
+        <CardContent className="px-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Nome
+              </Label>
+              <Input id="name" {...register("name")} className="h-10" />
               {errors.name && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.name.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" {...register("email")} />
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                {...register("email")}
+                className="h-10"
+              />
               {errors.email && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="role">Perfil</Label>
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-sm font-medium">
+                Perfil
+              </Label>
               <Select
                 value={selectedRole}
                 onValueChange={(value) => setValue("role", value as UserRole)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-10">
                   <SelectValue placeholder="Selecione um perfil" />
                 </SelectTrigger>
                 <SelectContent>
@@ -123,21 +136,24 @@ export function UserFormPage() {
                 </SelectContent>
               </Select>
               {errors.role && (
-                <p className="text-sm text-red-600 mt-1">
+                <p className="text-sm text-red-600 mt-1.5">
                   {errors.role.message}
                 </p>
               )}
             </div>
 
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-3 justify-end pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => navigate("/users")}
+                className="min-w-[100px]"
               >
                 Cancelar
               </Button>
-              <Button type="submit">{isEditing ? "Atualizar" : "Criar"}</Button>
+              <Button type="submit" className="min-w-[100px]">
+                {isEditing ? "Atualizar" : "Criar"}
+              </Button>
             </div>
           </form>
         </CardContent>

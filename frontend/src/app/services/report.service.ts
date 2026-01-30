@@ -1,31 +1,45 @@
 import { apiClient } from "./api";
 
-export interface SalesReport {
-  id: string;
-  productName: string;
-  quantity: number;
-  totalPrice: number;
-  partnerName: string;
-  customerName: string;
-  createdAt: string;
-}
-
-export interface CommissionReport {
-  partnerId: string;
-  partnerName: string;
-  totalCommission: number;
+export interface SalesReportResponse {
+  totalSales: number;
+  totalValue: number;
+  filters: {
+    startDate?: string;
+    endDate?: string;
+    partnerId?: number;
+  };
   sales: Array<{
-    saleId: string;
-    productName: string;
+    id: number;
+    value: number;
     quantity: number;
-    commission: number;
     createdAt: string;
+    product: {
+      id: number;
+      name: string;
+    };
+    customer: {
+      id: number;
+      name: string;
+    };
+    partner: {
+      id: number;
+      name: string;
+    };
   }>;
 }
 
+export interface CommissionReport {
+  partnerId: number;
+  partnerName: string;
+  totalSales: number;
+  totalValue: number;
+  totalCommission: number;
+  commissionRate: number;
+}
+
 export const reportService = {
-  getSalesReport: async (): Promise<SalesReport[]> => {
-    const response = await apiClient.get<SalesReport[]>("/reports/sales");
+  getSalesReport: async (): Promise<SalesReportResponse> => {
+    const response = await apiClient.get<SalesReportResponse>("/reports/sales");
     return response.data;
   },
 
@@ -37,7 +51,7 @@ export const reportService = {
   },
 
   getPartnerCommissions: async (
-    partnerId: string,
+    partnerId: number,
   ): Promise<CommissionReport> => {
     const response = await apiClient.get<CommissionReport>(
       `/partners/${partnerId}/commissions`,

@@ -15,7 +15,7 @@ export function useCommissionsReport() {
   });
 }
 
-export function usePartnerCommissions(partnerId: string) {
+export function usePartnerCommissions(partnerId: number) {
   return useQuery({
     queryKey: ["reports", "partner-commissions", partnerId],
     queryFn: () => reportService.getPartnerCommissions(partnerId),
