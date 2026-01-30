@@ -1,0 +1,78 @@
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { SaleRepository } from './sale.repository';
+import { UserRepository } from '../users/user.repository';
+import { ProductRepository } from '../products/product.repository';
+import { CreateSaleDto } from './dto/create-sale.dto';
+import { SaleResponseDto, SaleDetailResponseDto } from './dto/sale-response.dto';
+import { UserRole } from '@prisma/client';
+
+@Injectable()
+export class SaleService {
+  constructor(
+    private readonly saleRepository: SaleRepository,
+    private readonly userRepository: UserRepository,
+    private readonly productRepository: ProductRepository,
+  ) {}
+
+  async create(createSaleDto: CreateSaleDto): Promise<SaleResponseDto> {
+    // Validar produto
+    const product = await this.productRepository.findById(createSaleDto.productId);
+    if (!product) {
+      throw new NotFoundException(`Produto com ID ${createSaleDto.productId} não encontrado`);
+    }
+    if (!product.active) {
+      throw new BadRequestException('Produto não está ativo');
+    }
+
+    // Validar customer
+    const customer = await this.userRepository.findById(createSaleDto.customerId);
+    if (!customer) {
+      throw new NotFoundException(`Cliente com ID ${createSaleDto.customerId} não encontrado`);
+    }
+    if (customer.role !== UserRole.CUSTOMER) {
+      throw new BadRequestException('O customerId deve ser um usuário com role CUSTOMER');
+    }
+
+    // Validar partner
+    const partner = await this.userRepository.findById(createSaleDto.partnerId);
+    if (!partner) {
+      throw new NotFoundException(`Parceiro com ID ${createSaleDto.partnerId} não encontrado`);
+    }
+    if (partner.role !== UserRole.PARTNER) {
+      throw new BadRequestException('O partnerId deve ser um usuário com role PARTNER');
+    }
+
+    const sale = await this.saleRepository.create(createSaleDto);
+    return new SaleResponseDto(sale);
+  }
+
+  async findAll(page: number = 1, limit: number = 10): Promise<{
+    data: SaleDetailResponseDto[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const skip = (page - 1) * limit;
+    const [sales, total] = await Promise.all([
+      this.saleRepository.findAll(skip, limit),
+      this.saleRepository.count(),
+    ]);
+
+    return {
+      data: sales.map((sale) => new SaleDetailResponseDto(sale)),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async findById(id: number): Promise<SaleDetailResponseDto> {
+    const sale = await this.saleRepository.findById(id);
+    if (!sale) {
+      throw new NotFoundException(`Venda com ID ${id} não encontrada`);
+    }
+    return new SaleDetailResponseDto(sale);
+  }
+}

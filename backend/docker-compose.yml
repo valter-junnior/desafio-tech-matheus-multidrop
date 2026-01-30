@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: marketplace_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: marketplace
+      POSTGRES_PASSWORD: marketplace123
+      POSTGRES_DB: marketplace
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - marketplace_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: marketplace_app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://marketplace:marketplace123@postgres:5432/marketplace
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      NODE_ENV: development
+      PORT: 3000
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - marketplace_network
+    command: npm run start:dev
+
+volumes:
+  postgres_data:
+
+networks:
+  marketplace_network:
+    driver: bridge

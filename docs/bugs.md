@@ -1,0 +1,1 @@
+atualize o todo.md com o que foi feito e o que ainda nao foi feito ou implementado errado refaça 
