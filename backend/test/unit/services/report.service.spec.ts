@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReportService } from '../../../src/application/services/report.service';
 import { IReportRepository, REPORT_REPOSITORY } from '../../../src/core/repositories/report.repository';
+import { SaleEntity } from 'src/core/entities/sale.entity';
+import { UserRole } from 'src/core/enums/user-role.enum';
+import { ProductEntity } from 'src/core/entities/product.entity';
+import { UserEntity } from 'src/core/entities/user.entity';
 
 describe('ReportService', () => {
   let service: ReportService;
@@ -30,26 +34,30 @@ describe('ReportService', () => {
   });
 
   describe('getSalesReport', () => {
-    it('should return sales report with all data', async () => {
-      const mockSales = [
-        {
-          id: 1,
-          value: 100,
-          createdAt: new Date(),
-          product: { id: 1, name: 'Product 1' },
-          customer: { id: 2, name: 'Customer 1' },
-          partner: { id: 3, name: 'Partner 1' },
-        },
-        {
-          id: 2,
-          value: 200,
-          createdAt: new Date(),
-          product: { id: 2, name: 'Product 2' },
-          customer: { id: 2, name: 'Customer 1' },
-          partner: { id: 3, name: 'Partner 1' },
-        },
+      const product1 = new ProductEntity(1, 'Product 1', 100, true, new Date());
+      const product2 = new ProductEntity(2, 'Product 2', 200, true, new Date());
+
+      const customer = new UserEntity(2, 'Customer 1', 'customer1@test.com', UserRole.CUSTOMER, new Date());
+      const partner = new UserEntity(3, 'Partner 1', 'partner1@test.com', UserRole.PARTNER, new Date());
+
+      const mockSales: SaleEntity[] = [
+        new SaleEntity(
+          1, 100, product1.id, customer.id, partner.id,
+          new Date(),
+          product1,
+          customer,
+          partner,
+        ),
+        new SaleEntity(
+          2, 200, product2.id, customer.id, partner.id,
+          new Date(),
+          product2,
+          customer,
+          partner,
+        ),
       ];
 
+    it('should return sales report with all data', async () => {
       reportRepository.getSalesReport.mockResolvedValue({
         sales: mockSales,
         totalSales: 2,
@@ -105,19 +113,8 @@ describe('ReportService', () => {
     });
 
     it('should handle sales with missing relations', async () => {
-      const mockSales = [
-        {
-          id: 1,
-          value: 100,
-          createdAt: new Date(),
-          product: null,
-          customer: null,
-          partner: null,
-        },
-      ];
-
       reportRepository.getSalesReport.mockResolvedValue({
-        sales: mockSales,
+        sales: mockSales.slice(0, 1),
         totalSales: 1,
         totalValue: 100,
       });

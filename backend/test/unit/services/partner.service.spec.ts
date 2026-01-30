@@ -60,7 +60,6 @@ describe('PartnerService', () => {
         'partner@test.com',
         UserRole.PARTNER,
         new Date(),
-        new Date(),
       );
 
       const mockSales = [
@@ -103,7 +102,6 @@ describe('PartnerService', () => {
         'customer@test.com',
         UserRole.CUSTOMER,
         new Date(),
-        new Date(),
       );
 
       userRepository.findById.mockResolvedValue(mockUser);
@@ -121,7 +119,6 @@ describe('PartnerService', () => {
         'Partner',
         'partner@test.com',
         UserRole.PARTNER,
-        new Date(),
         new Date(),
       );
 

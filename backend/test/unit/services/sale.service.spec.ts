@@ -8,6 +8,7 @@ import { UserRole } from '../../../src/core/enums/user-role.enum';
 import { ProductEntity } from '../../../src/core/entities/product.entity';
 import { UserEntity } from '../../../src/core/entities/user.entity';
 import { SaleEntity } from '../../../src/core/entities/sale.entity';
+import { CreateSaleDto } from 'src/application/dtos/sale/create-sale.dto';
 
 describe('SaleService', () => {
   let service: SaleService;
@@ -67,16 +68,16 @@ describe('SaleService', () => {
   });
 
   describe('create', () => {
-    const createSaleDto = {
+    const createSaleDto: CreateSaleDto = {
       partnerId: 1,
       customerId: 2,
       productId: 3,
-      quantity: 2,
+      value: 200
     };
 
     const mockProduct = new ProductEntity(3, 'Product', 100, true, new Date());
-    const mockCustomer = new UserEntity(2, 'Customer', 'customer@test.com', UserRole.CUSTOMER, new Date(), new Date());
-    const mockPartner = new UserEntity(1, 'Partner', 'partner@test.com', UserRole.PARTNER, new Date(), new Date());
+    const mockCustomer = new UserEntity(2, 'Customer', 'customer@test.com', UserRole.CUSTOMER, new Date());
+    const mockPartner = new UserEntity(1, 'Partner', 'partner@test.com', UserRole.PARTNER, new Date());
     const mockSale = new SaleEntity(1, 200, 3, 2, 1, new Date());
 
     it('should create a sale successfully', async () => {
@@ -116,7 +117,7 @@ describe('SaleService', () => {
     });
 
     it('should throw BadRequestException when user is not a customer', async () => {
-      const notCustomer = new UserEntity(2, 'Admin', 'admin@test.com', UserRole.ADMIN, new Date(), new Date());
+      const notCustomer = new UserEntity(2, 'Admin', 'admin@test.com', UserRole.ADMIN, new Date());
       productRepository.findById.mockResolvedValue(mockProduct);
       userRepository.findById.mockResolvedValueOnce(notCustomer);
 
@@ -132,7 +133,7 @@ describe('SaleService', () => {
     });
 
     it('should throw BadRequestException when user is not a partner', async () => {
-      const notPartner = new UserEntity(1, 'Customer', 'customer2@test.com', UserRole.CUSTOMER, new Date(), new Date());
+      const notPartner = new UserEntity(1, 'Customer', 'customer2@test.com', UserRole.CUSTOMER, new Date());
       productRepository.findById.mockResolvedValue(mockProduct);
       userRepository.findById.mockResolvedValueOnce(mockCustomer);
       userRepository.findById.mockResolvedValueOnce(notPartner);

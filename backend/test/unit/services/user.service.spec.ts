@@ -50,7 +50,6 @@ describe('UserService', () => {
         createUserDto.email,
         createUserDto.role,
         new Date(),
-        new Date(),
       );
 
       userRepository.findByEmail.mockResolvedValue(null);
@@ -70,7 +69,6 @@ describe('UserService', () => {
         createUserDto.email,
         UserRole.CUSTOMER,
         new Date(),
-        new Date(),
       );
 
       userRepository.findByEmail.mockResolvedValue(existingUser);
@@ -84,8 +82,8 @@ describe('UserService', () => {
   describe('findAll', () => {
     it('should return paginated users', async () => {
       const mockUsers = [
-        new UserEntity(1, 'User 1', 'user1@test.com', UserRole.CUSTOMER, new Date(), new Date()),
-        new UserEntity(2, 'User 2', 'user2@test.com', UserRole.PARTNER, new Date(), new Date()),
+        new UserEntity(1, 'User 1', 'user1@test.com', UserRole.CUSTOMER, new Date()),
+        new UserEntity(2, 'User 2', 'user2@test.com', UserRole.PARTNER, new Date()),
       ];
 
       userRepository.findAll.mockResolvedValue(mockUsers);
@@ -120,7 +118,6 @@ describe('UserService', () => {
         'User 1',
         'user1@test.com',
         UserRole.CUSTOMER,
-        new Date(),
         new Date(),
       );
 
