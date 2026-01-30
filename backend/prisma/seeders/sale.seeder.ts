@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Sale } from '@prisma/client';
 
 interface SaleSeederData {
   products: Array<{ id: number; price: number }>;
@@ -17,7 +17,7 @@ export async function seedSales(prisma: PrismaClient, data: SaleSeederData) {
   }
 
   // Criar vendas variadas
-  const sales = [];
+  const sales: Sale[] = [];
 
   // Vendas do Partner 1
   sales.push(
