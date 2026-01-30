@@ -1,95 +1,17 @@
-# ✅ Sistema de Seeders Simplificado - RESOLVIDO
+corrija o seed.ts e tambem ajuste para aonde tiver importando entity assim import { User } from 'generated/prisma/client'; quero que crie um lib e use ele diferente tipo :
 
-## Problema
-Sistema de seeders precisava ser mais simples e flexível, permitindo executar múltiplos seeders com um único comando.
 
-## Solução Implementada
+import "dotenv/config";
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '../generated/prisma/client'
 
-### ✅ Comando Único e Flexível
-Agora usamos apenas **um comando** `npm run prisma:seed` com parâmetro opcional `--name`:
+const connectionString = `${process.env.DATABASE_URL}`
 
-```bash
-# Seed completo
-npm run prisma:seed
+const adapter = new PrismaPg({ connectionString })
+const prisma = new PrismaClient({ adapter })
 
-# Seed individual
-npm run prisma:seed -- --name=users
-npm run prisma:seed -- --name=products
-npm run prisma:seed -- --name=sales
+export { prisma }
 
-# Múltiplos seeders (separados por vírgula)
-npm run prisma:seed -- --name=users,products
-npm run prisma:seed -- --name=users,products,sales
-```
+import:
 
-### ✅ Como Funciona
-
-O `seed.ts` aceita múltiplos valores separados por vírgula:
-
-```typescript
-// Captura --name=valor1,valor2,valor3
-const args = process.argv.slice(2);
-const nameArg = args.find(arg => arg.startsWith('--name='));
-const seederNames = nameArg 
-  ? nameArg.split('=')[1].split(',').map(s => s.trim())
-  : ['all'];
-
-// Executa seeders solicitados
-if (seederNames.includes('all')) {
-  await seedAll();
-} else {
-  await runSeeders(seederNames); // Loop pelos seeders
-}
-```
-
-### ✅ Estrutura Final
-
-```
-prisma/
-├── seeders/           # Funções modulares reutilizáveis
-│   ├── user.seeder.ts
-│   ├── product.seeder.ts
-│   └── sale.seeder.ts
-└── seed.ts           # ✨ Único arquivo com suporte a múltiplos --name
-```
-
-### ✅ Package.json
-
-```json
-{
-  "scripts": {
-    "prisma:seed": "ts-node prisma/seed.ts"
-  }
-}
-```
-
-## Benefícios
-
-✅ **Ultra Simples**: 1 comando para tudo
-✅ **Flexível**: Execute 1 ou N seeders de uma vez
-✅ **Sem Duplicação**: Não precisa criar scripts extras no package.json
-✅ **Clean**: Código organizado e reutilizável
-✅ **Intuitivo**: `--name=users,products` é autoexplicativo
-
-## Exemplos de Uso
-
-```bash
-# Desenvolvimento: apenas users e products
-npm run prisma:seed -- --name=users,products
-
-# Testes: tudo do zero
-npm run prisma:seed
-
-# Adicionar apenas vendas
-npm run prisma:seed -- --name=sales
-```
-
-## ⚠️ Nota Importante
-
-Sempre use `--` antes dos parâmetros com `npm run`:
-```bash
-npm run prisma:seed -- --name=users  ✅
-npm run prisma:seed --name=users     ❌
-```
-
-O `--` garante que o npm passe os argumentos para o script ts-node. 
+import { prisma } from './lib/prisma'

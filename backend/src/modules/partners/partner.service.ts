@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { UserRepository } from '../users/user.repository';
 import { SaleRepository } from '../sales/sale.repository';
 import { CommissionResponseDto } from './dto/commission-response.dto';
-import { UserRole } from '@prisma/client';
+import { UserRole } from 'generated/prisma/client';
 
 @Injectable()
 export class PartnerService {

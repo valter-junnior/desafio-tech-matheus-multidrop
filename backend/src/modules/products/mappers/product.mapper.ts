@@ -1,4 +1,4 @@
-import { Product } from '@prisma/client';
+import { Product } from 'generated/prisma/client';
 import { ProductEntity } from '../entities/product.entity';
 
 export class ProductMapper {
