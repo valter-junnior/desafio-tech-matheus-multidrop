@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSales, useDeleteSale } from "../hooks/use-sales";
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../../shared/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,13 +8,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../components/ui/table";
+} from "../../../shared/components/ui/table";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "../../../shared/components/ui/card";
 import { Trash2, Plus } from "lucide-react";
 
 export function SalesListPage() {

@@ -5,22 +5,22 @@ import * as z from "zod";
 import { useCreateSale } from "../hooks/use-sales";
 import { useProducts } from "../../product/hooks/use-products";
 import { useUsers } from "../../user/hooks/use-users";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Button } from "../../../shared/components/ui/button";
+import { Input } from "../../../shared/components/ui/input";
+import { Label } from "../../../shared/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../components/ui/select";
+} from "../../../shared/components/ui/select";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "../../../shared/components/ui/card";
 
 const saleSchema = z.object({
   productId: z.string().min(1, "Produto é obrigatório"),
