@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
-import { Sale } from '@prisma/client';
+import { SaleEntity } from './entities/sale.entity';
+import { SaleMapper } from './mappers/sale.mapper';
 
 @Injectable()
 export class SaleRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateSaleDto): Promise<Sale> {
-    return this.prisma.sale.create({
+  async create(data: CreateSaleDto): Promise<SaleEntity> {
+    const sale = await this.prisma.sale.create({
       data,
     });
+    return SaleMapper.toDomain(sale);
   }
 
-  async findAll(skip: number = 0, take: number = 10): Promise<Sale[]> {
-    return this.prisma.sale.findMany({
+  async findAll(skip: number = 0, take: number = 10): Promise<SaleEntity[]> {
+    const sales = await this.prisma.sale.findMany({
       skip,
       take,
       orderBy: {
@@ -26,6 +28,8 @@ export class SaleRepository {
             id: true,
             name: true,
             price: true,
+            active: true,
+            createdAt: true,
           },
         },
         customer: {
@@ -33,6 +37,8 @@ export class SaleRepository {
             id: true,
             name: true,
             email: true,
+            role: true,
+            createdAt: true,
           },
         },
         partner: {
@@ -40,14 +46,17 @@ export class SaleRepository {
             id: true,
             name: true,
             email: true,
+            role: true,
+            createdAt: true,
           },
         },
       },
     });
+    return SaleMapper.toDomainArray(sales);
   }
 
-  async findById(id: number): Promise<Sale | null> {
-    return this.prisma.sale.findUnique({
+  async findById(id: number): Promise<SaleEntity | null> {
+    const sale = await this.prisma.sale.findUnique({
       where: { id },
       include: {
         product: true,
@@ -55,16 +64,18 @@ export class SaleRepository {
         partner: true,
       },
     });
+    return sale ? SaleMapper.toDomain(sale) : null;
   }
 
-  async findByPartner(partnerId: number): Promise<Sale[]> {
-    return this.prisma.sale.findMany({
+  async findByPartner(partnerId: number): Promise<SaleEntity[]> {
+    const sales = await this.prisma.sale.findMany({
       where: { partnerId },
       include: {
         product: true,
         customer: true,
       },
     });
+    return SaleMapper.toDomainArray(sales);
   }
 
   async count(): Promise<number> {

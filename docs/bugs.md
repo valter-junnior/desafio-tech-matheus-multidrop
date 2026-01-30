@@ -1,1 +1,2 @@
-analise todo o projeto e corrija a implementação do prisma que atualmente estou usando a versão 7.3 que é a nova versão lts corrija tanto nas config quanto a lib caso esteja na estrutra e pasta errada alem de ajustar nos repositories e etc.
+tem como ser algo "prisma:seed:{name}": "ts-node prisma/seed-{name}.ts",
+  e alem disso nao querro dois arquivos seeders fica muito complexto o seed.ts poderia chamar talvez ts-node prisma/seed.ts --name={} passando alguma parametro 

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { Exclude } from 'class-transformer';
+import { UserEntity } from '../entities/user.entity';
 
 export class UserResponseDto {
   @ApiProperty({ description: 'ID do usuário', example: 1 })
@@ -18,7 +19,11 @@ export class UserResponseDto {
   @ApiProperty({ description: 'Data de criação', example: '2024-01-15T10:30:00.000Z' })
   createdAt: Date;
 
-  constructor(partial: Partial<UserResponseDto>) {
-    Object.assign(this, partial);
+  constructor(partial: Partial<UserResponseDto> | UserEntity) {
+    if (partial instanceof UserEntity) {
+      Object.assign(this, partial.toObject());
+    } else {
+      Object.assign(this, partial);
+    }
   }
 }

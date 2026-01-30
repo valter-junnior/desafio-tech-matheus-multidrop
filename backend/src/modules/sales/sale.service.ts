@@ -4,7 +4,6 @@ import { UserRepository } from '../users/user.repository';
 import { ProductRepository } from '../products/product.repository';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleResponseDto, SaleDetailResponseDto } from './dto/sale-response.dto';
-import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class SaleService {
@@ -15,30 +14,30 @@ export class SaleService {
   ) {}
 
   async create(createSaleDto: CreateSaleDto): Promise<SaleResponseDto> {
-    // Validar produto
+    // Validar produto usando entity
     const product = await this.productRepository.findById(createSaleDto.productId);
     if (!product) {
       throw new NotFoundException(`Produto com ID ${createSaleDto.productId} não encontrado`);
     }
-    if (!product.active) {
-      throw new BadRequestException('Produto não está ativo');
+    if (!product.isAvailableForSale()) {
+      throw new BadRequestException('Produto não está disponível para venda');
     }
 
-    // Validar customer
+    // Validar customer usando entity
     const customer = await this.userRepository.findById(createSaleDto.customerId);
     if (!customer) {
       throw new NotFoundException(`Cliente com ID ${createSaleDto.customerId} não encontrado`);
     }
-    if (customer.role !== UserRole.CUSTOMER) {
+    if (!customer.isCustomer()) {
       throw new BadRequestException('O customerId deve ser um usuário com role CUSTOMER');
     }
 
-    // Validar partner
+    // Validar partner usando entity
     const partner = await this.userRepository.findById(createSaleDto.partnerId);
     if (!partner) {
       throw new NotFoundException(`Parceiro com ID ${createSaleDto.partnerId} não encontrado`);
     }
-    if (partner.role !== UserRole.PARTNER) {
+    if (!partner.isPartner()) {
       throw new BadRequestException('O partnerId deve ser um usuário com role PARTNER');
     }
 

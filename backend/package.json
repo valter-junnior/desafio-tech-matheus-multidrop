@@ -26,6 +26,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:seed:users": "ts-node prisma/seed-users.ts",
+    "prisma:seed:products": "ts-node prisma/seed-products.ts",
+    "prisma:seed:sales": "ts-node prisma/seed-sales.ts",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {

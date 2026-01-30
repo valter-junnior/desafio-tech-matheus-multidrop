@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { SaleEntity } from '../entities/sale.entity';
 
 export class SaleResponseDto {
   @ApiProperty({ description: 'ID da venda', example: 1 })
@@ -19,8 +20,20 @@ export class SaleResponseDto {
   @ApiProperty({ description: 'Data de criação', example: '2024-01-15T10:30:00.000Z' })
   createdAt: Date;
 
-  constructor(partial: Partial<SaleResponseDto>) {
-    Object.assign(this, partial);
+  constructor(partial: Partial<SaleResponseDto> | SaleEntity) {
+    if (partial instanceof SaleEntity) {
+      const obj = partial.toObject();
+      Object.assign(this, {
+        id: obj.id,
+        productId: obj.productId,
+        customerId: obj.customerId,
+        partnerId: obj.partnerId,
+        value: obj.value,
+        createdAt: obj.createdAt,
+      });
+    } else {
+      Object.assign(this, partial);
+    }
   }
 }
 
@@ -46,8 +59,27 @@ export class SaleDetailResponseDto extends SaleResponseDto {
     email: string;
   };
 
-  constructor(partial: Partial<SaleDetailResponseDto>) {
+  constructor(partial: Partial<SaleDetailResponseDto> | SaleEntity) {
     super(partial);
-    Object.assign(this, partial);
+    if (partial instanceof SaleEntity) {
+      const obj = partial.toObject();
+      this.product = obj.product ? {
+        id: obj.product.id,
+        name: obj.product.name,
+        price: obj.product.price,
+      } : undefined;
+      this.customer = obj.customer ? {
+        id: obj.customer.id,
+        name: obj.customer.name,
+        email: obj.customer.email,
+      } : undefined;
+      this.partner = obj.partner ? {
+        id: obj.partner.id,
+        name: obj.partner.name,
+        email: obj.partner.email,
+      } : undefined;
+    } else {
+      Object.assign(this, partial);
+    }
   }
 }
