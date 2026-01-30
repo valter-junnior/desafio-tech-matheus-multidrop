@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
 import { ProductRepositoryPrisma } from './infrastructure/product-repository.prisma';
-import { PRODUCT_REPOSITORY } from './domain/interfaces/product-repository.interface';
+import { PRODUCT_REPOSITORY } from '../../core/repositories/product.repository';
 
 /**
  * Módulo de produtos

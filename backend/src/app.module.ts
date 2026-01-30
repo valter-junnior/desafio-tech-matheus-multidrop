@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
+import { AppController } from './infrastructure/http/controllers/app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './infrastructure/database/database.module';
 import { UserModule } from './modules/users/user.module';
 import { ProductModule } from './modules/products/product.module';
 import { SaleModule } from './modules/sales/sale.module';

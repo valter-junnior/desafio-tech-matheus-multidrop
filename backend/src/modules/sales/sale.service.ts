@@ -5,8 +5,8 @@ import type { ISaleRepository } from './domain/interfaces/sale-repository.interf
 import { SALE_REPOSITORY } from './domain/interfaces/sale-repository.interface';
 import type { IUserRepository } from '../users/domain/interfaces/user-repository.interface';
 import { USER_REPOSITORY } from '../users/domain/interfaces/user-repository.interface';
-import type { IProductRepository } from '../products/domain/interfaces/product-repository.interface';
-import { PRODUCT_REPOSITORY } from '../products/domain/interfaces/product-repository.interface';
+import type { IProductRepository } from '../../core/repositories/product.repository';
+import { PRODUCT_REPOSITORY } from '../../core/repositories/product.repository';
 
 /**
  * Service de vendas - Camada de aplicação

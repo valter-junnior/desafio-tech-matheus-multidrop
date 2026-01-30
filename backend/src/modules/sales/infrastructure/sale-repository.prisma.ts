@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../database/prisma.service';
+import { PrismaService } from '../../../infrastructure/database/prisma/prisma.service';
 import { CreateSaleDto } from '../dto/create-sale.dto';
 import { SaleEntity } from '../entities/sale.entity';
 import { SaleMapper } from '../mappers/sale.mapper';

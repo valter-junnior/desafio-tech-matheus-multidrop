@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/product-response.dto';
-import type { IProductRepository } from './domain/interfaces/product-repository.interface';
-import { PRODUCT_REPOSITORY } from './domain/interfaces/product-repository.interface';
+import type { IProductRepository } from '../../core/repositories/product.repository';
+import { PRODUCT_REPOSITORY } from '../../core/repositories/product.repository';
 
 /**
  * Service de produtos - Camada de aplicação

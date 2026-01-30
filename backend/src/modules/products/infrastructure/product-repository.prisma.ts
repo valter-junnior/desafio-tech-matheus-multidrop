@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../database/prisma.service';
+import { PrismaService } from '../../../infrastructure/database/prisma/prisma.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { ProductEntity } from '../entities/product.entity';
 import { ProductMapper } from '../mappers/product.mapper';
-import { IProductRepository } from '../domain/interfaces/product-repository.interface';
+import { IProductRepository } from '../../../core/repositories/product.repository';
 import { Product } from 'src/generated/prisma/client';
 import { ProductPersistence } from './types/product-persistence.type';
 

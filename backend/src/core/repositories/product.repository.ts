@@ -1,11 +1,6 @@
-import type { ProductEntity } from '../../entities/product.entity';
-import type { CreateProductDto } from '../../dto/create-product.dto';
+import type { ProductEntity } from '../../modules/products/entities/product.entity';
+import type { CreateProductDto } from '../../modules/products/dto/create-product.dto';
 
-/**
- * Interface abstrata do repositório de produtos
- * Define o contrato que a camada de infraestrutura deve implementar
- * Segue o princípio de Inversão de Dependência (DIP)
- */
 export interface IProductRepository {
   create(data: CreateProductDto): Promise<ProductEntity>;
   findAll(skip?: number, take?: number): Promise<ProductEntity[]>;

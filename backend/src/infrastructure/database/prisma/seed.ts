@@ -2,7 +2,7 @@
 import { seedUsers } from './seeders/user.seeder';
 import { seedProducts } from './seeders/product.seeder';
 import { seedSales } from './seeders/sale.seeder';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from 'src/infrastructure/database/prisma/prisma.service';
 
 const prisma = new PrismaService();
 
