@@ -46,3 +46,5 @@ lerna-debug.log*
 # Prisma
 prisma/migrations/*/*.sql
 !prisma/migrations/migration_lock.toml
+
+/generated/prisma

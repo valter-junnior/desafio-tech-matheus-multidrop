@@ -1,1 +1,1 @@
-atualize o todo.md com o que foi feito e o que ainda nao foi feito ou implementado errado refaça 
+analise todo o projeto e corrija a implementação do prisma que atualmente estou usando a versão 7.3 que é a nova versão lts corrija tanto nas config quanto a lib caso esteja na estrutra e pasta errada alem de ajustar nos repositories e etc.
