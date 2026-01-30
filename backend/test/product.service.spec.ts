@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductService } from './product.service';
-import { IProductRepository, PRODUCT_REPOSITORY } from '../../core/repositories/product.repository';
+import { ProductService } from '../src/application/services/product.service';
+import { IProductRepository, PRODUCT_REPOSITORY } from '../src/core/repositories/product.repository';
 import { NotFoundException } from '@nestjs/common';
-import { ProductEntity } from '../../core/entities/product.entity';
+import { ProductEntity } from '../src/core/entities/product.entity';
 
 describe('ProductService', () => {
   let service: ProductService;

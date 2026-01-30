@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SaleService } from './sale.service';
-import { ISaleRepository, SALE_REPOSITORY } from '../../core/repositories/sale.repository';
-import { IUserRepository, USER_REPOSITORY } from '../../core/repositories/user.repository';
-import { IProductRepository, PRODUCT_REPOSITORY } from '../../core/repositories/product.repository';
+import { SaleService } from '../src/application/services/sale.service';
+import { ISaleRepository, SALE_REPOSITORY } from '../src/core/repositories/sale.repository';
+import { IUserRepository, USER_REPOSITORY } from '../src/core/repositories/user.repository';
+import { IProductRepository, PRODUCT_REPOSITORY } from '../src/core/repositories/product.repository';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { UserRole } from '../../core/enums/user-role.enum';
-import { ProductEntity } from '../../core/entities/product.entity';
-import { UserEntity } from '../../core/entities/user.entity';
-import { SaleEntity } from '../../core/entities/sale.entity';
+import { UserRole } from '../src/core/enums/user-role.enum';
+import { ProductEntity } from '../src/core/entities/product.entity';
+import { UserEntity } from '../src/core/entities/user.entity';
+import { SaleEntity } from '../src/core/entities/sale.entity';
 
 describe('SaleService', () => {
   let service: SaleService;

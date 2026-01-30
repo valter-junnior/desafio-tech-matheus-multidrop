@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReportService } from './report.service';
-import { IReportRepository, REPORT_REPOSITORY } from '../../core/repositories/report.repository';
+import { ReportService } from '../src/application/services/report.service';
+import { IReportRepository, REPORT_REPOSITORY } from '../src/core/repositories/report.repository';
 
 describe('ReportService', () => {
   let service: ReportService;
