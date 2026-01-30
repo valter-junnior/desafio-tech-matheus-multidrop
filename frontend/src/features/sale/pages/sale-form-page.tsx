@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Loader2 } from "lucide-react";
 import { useCreateSale } from "../hooks/use-sales";
 import { useProducts } from "../../product/hooks/use-products";
 import { useUsers } from "../../user/hooks/use-users";
+import { useErrorHandler } from "../../../shared/hooks/useErrorHandler";
+import { useCurrencyFormatter } from "../../../shared/hooks/useCurrencyFormatter";
 import { Button } from "../../../shared/components/ui/button";
 import { Input } from "../../../shared/components/ui/input";
 import { Label } from "../../../shared/components/ui/label";
@@ -27,7 +30,7 @@ const saleSchema = z.object({
   productId: z.number().min(1, "Produto é obrigatório"),
   partnerId: z.number().min(1, "Parceiro é obrigatório"),
   customerId: z.number().min(1, "Cliente é obrigatório"),
-  quantity: z.coerce.number().min(1, "Quantidade deve ser maior que 0"),
+  quantity: z.number().min(1, "Quantidade deve ser maior que 0"),
 });
 
 type SaleFormData = z.infer<typeof saleSchema>;
@@ -38,6 +41,8 @@ export function SaleFormPage() {
   const { data: products } = useProducts();
   const { data: partners } = useUsers("PARTNER");
   const { data: customers } = useUsers("CUSTOMER");
+  const { handleError, handleSuccess } = useErrorHandler();
+  const currencyFormatter = useCurrencyFormatter();
 
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null,
@@ -59,6 +64,16 @@ export function SaleFormPage() {
     resolver: zodResolver(saleSchema),
     mode: "onChange",
   });
+
+  // Memoizar formatação de produtos
+  const formattedProducts = useMemo(
+    () =>
+      products?.map((product) => ({
+        ...product,
+        formattedPrice: currencyFormatter.format(product.price),
+      })),
+    [products, currencyFormatter],
+  );
 
   const onSubmit = async (data: SaleFormData) => {
     // Validar selects manualmente
@@ -82,9 +97,10 @@ export function SaleFormPage() {
         customerId: selectedCustomerId,
         quantity: data.quantity,
       });
+      handleSuccess("Venda criada com sucesso!");
       navigate("/sales");
     } catch (error) {
-      console.error("Erro ao criar venda:", error);
+      handleError(error, "Erro ao criar venda");
     }
   };
 
@@ -111,13 +127,9 @@ export function SaleFormPage() {
                   <SelectValue placeholder="Selecione um produto" />
                 </SelectTrigger>
                 <SelectContent>
-                  {products?.map((product) => (
+                  {formattedProducts?.map((product) => (
                     <SelectItem key={product.id} value={product.id.toString()}>
-                      {product.name} -{" "}
-                      {new Intl.NumberFormat("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      }).format(product.price)}
+                      {product.name} - {product.formattedPrice}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -214,11 +226,23 @@ export function SaleFormPage() {
                 variant="outline"
                 onClick={() => navigate("/sales")}
                 className="min-w-[100px]"
+                disabled={createSale.isPending}
               >
                 Cancelar
               </Button>
-              <Button type="submit" className="min-w-[100px]">
-                Criar Venda
+              <Button
+                type="submit"
+                className="min-w-[100px]"
+                disabled={createSale.isPending}
+              >
+                {createSale.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Criando...
+                  </>
+                ) : (
+                  "Criar Venda"
+                )}
               </Button>
             </div>
           </form>

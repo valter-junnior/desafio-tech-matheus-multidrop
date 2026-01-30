@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { AUTH_TOKEN_KEY, USER_DATA_KEY } from "../../../app/config/constants";
 
 interface User {
   id: string;
@@ -23,13 +22,9 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       login: (token, user) => {
-        localStorage.setItem(AUTH_TOKEN_KEY, token);
-        localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
         set({ token, user, isAuthenticated: true });
       },
       logout: () => {
-        localStorage.removeItem(AUTH_TOKEN_KEY);
-        localStorage.removeItem(USER_DATA_KEY);
         set({ token: null, user: null, isAuthenticated: false });
       },
     }),

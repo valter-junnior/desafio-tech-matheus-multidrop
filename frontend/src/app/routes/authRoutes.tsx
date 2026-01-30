@@ -68,7 +68,7 @@ export const authRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: <Navigate to="/users" replace />,
       },
       {
         path: "users",

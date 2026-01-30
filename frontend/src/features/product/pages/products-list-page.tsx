@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useProducts, useDeleteProduct } from "../hooks/use-products";
+import { useErrorHandler } from "../../../shared/hooks/useErrorHandler";
+import { useCurrencyFormatter } from "../../../shared/hooks/useCurrencyFormatter";
 import { Button } from "../../../shared/components/ui/button";
 import { Badge } from "../../../shared/components/ui/badge";
 import {
@@ -16,35 +19,67 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../shared/components/ui/card";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../../../shared/components/ui/alert-dialog";
+import { Alert, AlertDescription } from "../../../shared/components/ui/alert";
+import { Pencil, Trash2, Plus, AlertCircle, Loader2 } from "lucide-react";
 
 export function ProductsListPage() {
   const navigate = useNavigate();
-  const { data: products, isLoading, error } = useProducts();
+  const { data: products, isLoading, error, refetch } = useProducts();
   const deleteProduct = useDeleteProduct();
+  const { handleError, handleSuccess } = useErrorHandler();
+  const currencyFormatter = useCurrencyFormatter();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm("Tem certeza que deseja excluir este produto?")) {
-      try {
-        await deleteProduct.mutateAsync(id);
-      } catch (error) {
-        console.error("Erro ao excluir produto:", error);
-      }
+  const handleDeleteClick = (id: number) => {
+    setDeleteId(id.toString());
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
+
+    try {
+      await deleteProduct.mutateAsync(deleteId);
+      handleSuccess("Produto excluído com sucesso!");
+      setDeleteId(null);
+    } catch (error) {
+      handleError(error, "Erro ao excluir produto");
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <p>Carregando...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <p className="text-red-600">Erro ao carregar produtos</p>
+      <div className="container mx-auto py-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="ml-2">
+            Erro ao carregar produtos.
+            <Button
+              variant="link"
+              onClick={() => refetch()}
+              className="ml-2 p-0 h-auto"
+            >
+              Tentar novamente
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -77,10 +112,7 @@ export function ProductsListPage() {
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(product.price)}
+                    {currencyFormatter.format(product.price)}
                   </TableCell>
                   <TableCell>
                     <Badge variant={product.active ? "default" : "secondary"}>
@@ -101,7 +133,8 @@ export function ProductsListPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleDelete(product.id)}
+                      onClick={() => handleDeleteClick(product.id)}
+                      disabled={deleteProduct.isPending}
                     >
                       <Trash2 className="h-4 w-4 text-red-600" />
                     </Button>
@@ -112,6 +145,38 @@ export function ProductsListPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este produto? Esta ação não pode
+              ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteProduct.isPending}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={deleteProduct.isPending}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleteProduct.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                "Excluir"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

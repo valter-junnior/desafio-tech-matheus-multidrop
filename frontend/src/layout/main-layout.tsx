@@ -21,7 +21,7 @@ export function MainLayout() {
   };
 
   const navigation = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    /* { name: "Dashboard", href: "/", icon: LayoutDashboard }, */
     { name: "Usuários", href: "/users", icon: Users },
     { name: "Produtos", href: "/products", icon: Package },
     { name: "Vendas", href: "/sales", icon: ShoppingCart },

@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useSales, useDeleteSale } from "../hooks/use-sales";
+import { useErrorHandler } from "../../../shared/hooks/useErrorHandler";
+import { useCurrencyFormatter } from "../../../shared/hooks/useCurrencyFormatter";
 import { Button } from "../../../shared/components/ui/button";
 import {
   Table,
@@ -15,35 +18,67 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../shared/components/ui/card";
-import { Trash2, Plus } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../../../shared/components/ui/alert-dialog";
+import { Alert, AlertDescription } from "../../../shared/components/ui/alert";
+import { Trash2, Plus, AlertCircle, Loader2 } from "lucide-react";
 
 export function SalesListPage() {
   const navigate = useNavigate();
-  const { data: sales, isLoading, error } = useSales();
+  const { data: sales, isLoading, error, refetch } = useSales();
   const deleteSale = useDeleteSale();
+  const { handleError, handleSuccess } = useErrorHandler();
+  const currencyFormatter = useCurrencyFormatter();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm("Tem certeza que deseja excluir esta venda?")) {
-      try {
-        await deleteSale.mutateAsync(id);
-      } catch (error) {
-        console.error("Erro ao excluir venda:", error);
-      }
+  const handleDeleteClick = (id: number) => {
+    setDeleteId(id.toString());
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
+
+    try {
+      await deleteSale.mutateAsync(deleteId);
+      handleSuccess("Venda excluída com sucesso!");
+      setDeleteId(null);
+    } catch (error) {
+      handleError(error, "Erro ao excluir venda");
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <p>Carregando...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <p className="text-red-600">Erro ao carregar vendas</p>
+      <div className="container mx-auto py-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="ml-2">
+            Erro ao carregar vendas.
+            <Button
+              variant="link"
+              onClick={() => refetch()}
+              className="ml-2 p-0 h-auto"
+            >
+              Tentar novamente
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
     );
   }
@@ -83,10 +118,7 @@ export function SalesListPage() {
                   <TableCell>{sale.customer?.name || "N/A"}</TableCell>
                   <TableCell>{sale.quantity}</TableCell>
                   <TableCell>
-                    {new Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(sale.totalPrice)}
+                    {currencyFormatter.format(sale.totalPrice)}
                   </TableCell>
                   <TableCell>
                     {new Date(sale.createdAt).toLocaleDateString("pt-BR")}
@@ -95,7 +127,8 @@ export function SalesListPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleDelete(sale.id)}
+                      onClick={() => handleDeleteClick(sale.id)}
+                      disabled={deleteSale.isPending}
                     >
                       <Trash2 className="h-4 w-4 text-red-600" />
                     </Button>
@@ -106,6 +139,38 @@ export function SalesListPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir esta venda? Esta ação não pode ser
+              desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteSale.isPending}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={deleteSale.isPending}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleteSale.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                "Excluir"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

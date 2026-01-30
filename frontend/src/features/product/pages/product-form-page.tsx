@@ -2,11 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import {
   useCreateProduct,
   useUpdateProduct,
   useProduct,
 } from "../hooks/use-products";
+import { useErrorHandler } from "../../../shared/hooks/useErrorHandler";
 import { Button } from "../../../shared/components/ui/button";
 import { Input } from "../../../shared/components/ui/input";
 import { Label } from "../../../shared/components/ui/label";
@@ -17,7 +20,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../shared/components/ui/card";
-import { useEffect } from "react";
 
 const productSchema = z.object({
   name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
@@ -35,6 +37,8 @@ export function ProductFormPage() {
   const { data: product } = useProduct(id || "");
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
+  const { handleError, handleSuccess } = useErrorHandler();
+  const isPending = createProduct.isPending || updateProduct.isPending;
 
   const {
     register,
@@ -64,12 +68,14 @@ export function ProductFormPage() {
     try {
       if (isEditing && id) {
         await updateProduct.mutateAsync({ id, data });
+        handleSuccess("Produto atualizado com sucesso!");
       } else {
         await createProduct.mutateAsync(data);
+        handleSuccess("Produto criado com sucesso!");
       }
       navigate("/products");
     } catch (error) {
-      console.error("Erro ao salvar produto:", error);
+      handleError(error, "Erro ao salvar produto");
     }
   };
 
@@ -135,11 +141,25 @@ export function ProductFormPage() {
                 variant="outline"
                 onClick={() => navigate("/products")}
                 className="min-w-[100px]"
+                disabled={isPending}
               >
                 Cancelar
               </Button>
-              <Button type="submit" className="min-w-[100px]">
-                {isEditing ? "Atualizar" : "Criar"}
+              <Button
+                type="submit"
+                className="min-w-[100px]"
+                disabled={isPending}
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isEditing ? "Atualizando..." : "Criando..."}
+                  </>
+                ) : isEditing ? (
+                  "Atualizar"
+                ) : (
+                  "Criar"
+                )}
               </Button>
             </div>
           </form>
