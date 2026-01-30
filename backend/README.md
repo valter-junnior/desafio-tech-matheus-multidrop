@@ -21,17 +21,41 @@ API REST desenvolvida com NestJS para gerenciamento de um sistema de marketplace
 
 ## 🛠️ Instalação
 
-### Com Docker (Recomendado)
+### Com Docker (Recomendado) 🐳
 
+**Iniciar todo o ambiente (um único comando):**
 ```bash
-# Subir containers
 docker compose up -d --build
+```
 
-# Aplicar migrations
-docker compose exec app npm run prisma:migrate:deploy
+Isso irá:
+- ✅ Iniciar PostgreSQL
+- ✅ Gerar Prisma Client
+- ✅ Executar migrations do banco
+- ✅ Popular banco com dados de exemplo (seed)
+- ✅ Iniciar API em modo watch (hot reload)
 
-# Rodar seed (popular banco com dados iniciais)
-docker compose exec app npm run prisma:seed
+**URLs disponíveis:**
+- 🌐 API: http://localhost:3000
+- 📚 Swagger: http://localhost:3000/api/docs
+- 🗄️ PostgreSQL: localhost:5432
+
+**Comandos úteis:**
+```bash
+# Ver logs da aplicação
+docker compose logs -f app
+
+# Ver status dos containers
+docker compose ps
+
+# Parar tudo
+docker compose down
+
+# Parar e limpar banco de dados
+docker compose down -v
+
+# Reconstruir
+docker compose up -d --build
 ```
 
 ### Sem Docker
@@ -42,6 +66,8 @@ npm install
 
 # Configurar variáveis de ambiente
 cp .env.example .env
+
+# Edite o .env com suas configurações do PostgreSQL
 
 # Aplicar migrations
 npm run prisma:migrate
@@ -269,11 +295,3 @@ npm run prisma:migrate
 - Sanitização de dados
 - CORS habilitado
 - Prepared statements (Prisma)
-
-## 📄 Licença
-
-UNLICENSED - Projeto privado
-
-## 👤 Autor
-
-Desenvolvido como parte do desafio técnico Multidrop.

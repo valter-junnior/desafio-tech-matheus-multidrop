@@ -1,10 +1,7 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15-alpine
     container_name: marketplace_db
-    restart: unless-stopped
     environment:
       POSTGRES_USER: marketplace
       POSTGRES_PASSWORD: marketplace123
@@ -13,31 +10,26 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - marketplace_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marketplace"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: marketplace_app
-    restart: unless-stopped
     ports:
       - '3000:3000'
-    env_file:
-      - .env
+    environment:
+      DATABASE_URL: "postgresql://marketplace:marketplace123@postgres:5432/marketplace?schema=public"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
-      - .:/app
+      - ./src:/app/src
       - /app/node_modules
-    networks:
-      - marketplace_network
-    command: npm run start:dev
+    command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run start"
 
 volumes:
   postgres_data:
-
-networks:
-  marketplace_network:
-    driver: bridge
