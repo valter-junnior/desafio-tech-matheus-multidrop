@@ -1,18 +1,32 @@
-import { User } from 'src/generated/prisma/client';
 import { UserEntity } from '../entities/user.entity';
+import {
+  UserPersistence,
+  CreateUserPersistence,
+} from '../infrastructure/types/user-persistence.type';
 
+/**
+ * Mapper para conversão entre camada de domínio e persistência
+ * Isola a lógica de transformação e garante que a camada de domínio
+ * não dependa diretamente do Prisma
+ */
 export class UserMapper {
-  static toDomain(prismaUser: User): UserEntity {
+  /**
+   * Converte dados de persistência para entidade de domínio
+   */
+  static toDomain(persistence: UserPersistence): UserEntity {
     return new UserEntity(
-      prismaUser.id,
-      prismaUser.name,
-      prismaUser.email,
-      prismaUser.role,
-      prismaUser.createdAt,
+      persistence.id,
+      persistence.name,
+      persistence.email,
+      persistence.role,
+      persistence.createdAt,
     );
   }
 
-  static toPrisma(entity: UserEntity): Omit<User, 'id' | 'createdAt'> {
+  /**
+   * Converte entidade de domínio para dados de persistência
+   */
+  static toPersistence(entity: UserEntity): CreateUserPersistence {
     return {
       name: entity.name,
       email: entity.email,
@@ -20,7 +34,10 @@ export class UserMapper {
     };
   }
 
-  static toDomainArray(prismaUsers: User[]): UserEntity[] {
-    return prismaUsers.map((user) => this.toDomain(user));
+  /**
+   * Converte array de dados de persistência para array de entidades de domínio
+   */
+  static toDomainArray(persistenceArray: UserPersistence[]): UserEntity[] {
+    return persistenceArray.map((persistence) => this.toDomain(persistence));
   }
 }

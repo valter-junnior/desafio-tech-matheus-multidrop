@@ -1,5 +1,5 @@
-import { ProductEntity } from '../entities/product.entity';
-import { CreateProductDto } from '../../dto/create-product.dto';
+import type { ProductEntity } from '../../entities/product.entity';
+import type { CreateProductDto } from '../../dto/create-product.dto';
 
 /**
  * Interface abstrata do repositório de produtos

@@ -1,11 +1,20 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import { Injectable, ConflictException, NotFoundException, Inject } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import type { IUserRepository } from './domain/interfaces/user-repository.interface';
+import { USER_REPOSITORY } from './domain/interfaces/user-repository.interface';
 
+/**
+ * Service de usuários - Camada de aplicação
+ * Orquestra as operações usando a interface do repositório
+ * Não depende de implementações concretas (DIP)
+ */
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     // Verifica se email já existe

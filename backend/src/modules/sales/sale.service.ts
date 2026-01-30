@@ -1,16 +1,27 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { SaleRepository } from './sale.repository';
-import { UserRepository } from '../users/user.repository';
-import { ProductRepository } from '../products/product.repository';
+import { Injectable, BadRequestException, NotFoundException, Inject } from '@nestjs/common';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { SaleResponseDto, SaleDetailResponseDto } from './dto/sale-response.dto';
+import type { ISaleRepository } from './domain/interfaces/sale-repository.interface';
+import { SALE_REPOSITORY } from './domain/interfaces/sale-repository.interface';
+import type { IUserRepository } from '../users/domain/interfaces/user-repository.interface';
+import { USER_REPOSITORY } from '../users/domain/interfaces/user-repository.interface';
+import type { IProductRepository } from '../products/domain/interfaces/product-repository.interface';
+import { PRODUCT_REPOSITORY } from '../products/domain/interfaces/product-repository.interface';
 
+/**
+ * Service de vendas - Camada de aplicação
+ * Orquestra as operações usando as interfaces dos repositórios
+ * Não depende de implementações concretas (DIP)
+ */
 @Injectable()
 export class SaleService {
   constructor(
-    private readonly saleRepository: SaleRepository,
-    private readonly userRepository: UserRepository,
-    private readonly productRepository: ProductRepository,
+    @Inject(SALE_REPOSITORY)
+    private readonly saleRepository: ISaleRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+    @Inject(PRODUCT_REPOSITORY)
+    private readonly productRepository: IProductRepository,
   ) {}
 
   async create(createSaleDto: CreateSaleDto): Promise<SaleResponseDto> {

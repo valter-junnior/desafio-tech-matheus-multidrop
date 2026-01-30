@@ -1,5 +1,5 @@
-import { UserEntity } from '../entities/user.entity';
-import { CreateUserDto } from '../../dto/create-user.dto';
+import type { UserEntity } from '../../entities/user.entity';
+import type { CreateUserDto } from '../../dto/create-user.dto';
 
 /**
  * Interface abstrata do repositório de usuários

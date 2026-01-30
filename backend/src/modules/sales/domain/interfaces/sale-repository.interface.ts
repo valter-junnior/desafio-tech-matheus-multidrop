@@ -1,5 +1,5 @@
-import { SaleEntity } from '../entities/sale.entity';
-import { CreateSaleDto } from '../../dto/create-sale.dto';
+import type { SaleEntity } from '../../entities/sale.entity';
+import type { CreateSaleDto } from '../../dto/create-sale.dto';
 
 /**
  * Interface abstrata do repositório de vendas

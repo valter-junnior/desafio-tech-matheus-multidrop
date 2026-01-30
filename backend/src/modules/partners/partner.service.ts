@@ -1,16 +1,25 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { UserRepository } from '../users/user.repository';
-import { SaleRepository } from '../sales/sale.repository';
+import { Injectable, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import { CommissionResponseDto } from './dto/commission-response.dto';
-import { UserRole } from 'src/generated/prisma/client';
+import { UserRole } from '../users/domain/enums/user-role.enum';
+import type { IUserRepository } from '../users/domain/interfaces/user-repository.interface';
+import { USER_REPOSITORY } from '../users/domain/interfaces/user-repository.interface';
+import type { ISaleRepository } from '../sales/domain/interfaces/sale-repository.interface';
+import { SALE_REPOSITORY } from '../sales/domain/interfaces/sale-repository.interface';
 
+/**
+ * Service de parceiros - Camada de aplicação
+ * Orquestra as operações usando as interfaces dos repositórios
+ * Não depende de implementações concretas (DIP)
+ */
 @Injectable()
 export class PartnerService {
   private readonly COMMISSION_RATE = 0.1; // 10%
 
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly saleRepository: SaleRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
+    @Inject(SALE_REPOSITORY)
+    private readonly saleRepository: ISaleRepository,
   ) {}
 
   async getCommissions(partnerId: number): Promise<CommissionResponseDto> {
