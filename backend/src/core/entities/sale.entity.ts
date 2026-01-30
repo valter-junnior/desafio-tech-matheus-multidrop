@@ -35,7 +35,6 @@ export class SaleEntity {
     this.validate();
   }
 
-  // Getters
   get id(): number {
     return this._id;
   }
@@ -72,7 +71,6 @@ export class SaleEntity {
     return this._partner;
   }
 
-  // Métodos de domínio
   calculateCommission(commissionRate: number = 0.1): number {
     if (commissionRate < 0 || commissionRate > 1) {
       throw new Error('Taxa de comissão deve estar entre 0 e 1');
@@ -89,7 +87,6 @@ export class SaleEntity {
     );
   }
 
-  // Validação com regras de negócio
   private validate(): void {
     if (this._value <= 0) {
       throw new Error('Valor da venda deve ser maior que zero');
@@ -107,7 +104,6 @@ export class SaleEntity {
       throw new Error('ID do parceiro inválido');
     }
 
-    // Validações adicionais quando as entidades relacionadas estão disponíveis
     if (this._customer && !this._customer.isCustomer()) {
       throw new Error('O usuário deve ser um cliente');
     }
@@ -121,7 +117,6 @@ export class SaleEntity {
     }
   }
 
-  // Factory method
   static create(
     value: number,
     productId: number,
@@ -146,7 +141,6 @@ export class SaleEntity {
     );
   }
 
-  // Para conversão em objeto simples
   toObject() {
     return {
       id: this._id,

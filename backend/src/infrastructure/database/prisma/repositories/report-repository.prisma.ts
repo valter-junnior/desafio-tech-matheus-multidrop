@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../infrastructure/database/prisma/prisma.service';
-
-export interface SalesReportFilters {
-  startDate?: Date;
-  endDate?: Date;
-  partnerId?: number;
-}
+import { PrismaService } from '../prisma.service';
+import type {
+  IReportRepository,
+  SalesReportFilters,
+  SalesReportResult,
+} from '../../../../core/repositories/report.repository';
+import { SaleMapper } from '../models/sale/sale.mapper';
 
 @Injectable()
-export class ReportRepository {
-  constructor(private prisma: PrismaService) {}
+export class ReportRepositoryPrisma implements IReportRepository {
+  constructor(private readonly prisma: PrismaService) {}
 
-  async getSalesReport(filters: SalesReportFilters) {
+  async getSalesReport(filters: SalesReportFilters): Promise<SalesReportResult> {
     const where: any = {};
 
     if (filters.startDate || filters.endDate) {
@@ -28,7 +28,7 @@ export class ReportRepository {
       where.partnerId = filters.partnerId;
     }
 
-    const [sales, totalSales, totalValue] = await Promise.all([
+    const [salesData, totalSales, totalValueAgg] = await Promise.all([
       this.prisma.sale.findMany({
         where,
         include: {
@@ -67,10 +67,14 @@ export class ReportRepository {
       }),
     ]);
 
+    const sales = salesData.map((saleData) =>
+      SaleMapper.toDomain(saleData as any),
+    );
+
     return {
       sales,
       totalSales,
-      totalValue: totalValue._sum.value || 0,
+      totalValue: totalValueAgg._sum.value || 0,
     };
   }
 }

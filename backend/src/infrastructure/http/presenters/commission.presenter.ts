@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CommissionResponseDto } from '../../../application/dtos/commission-response.dto';
 
-export class CommissionResponseDto {
+export class CommissionPresenter {
   @ApiProperty({ description: 'ID do parceiro', example: 3 })
   partnerId: number;
 
@@ -19,7 +20,14 @@ export class CommissionResponseDto {
   @ApiProperty({ description: 'Taxa de comissão', example: 0.10 })
   commissionRate: number;
 
-  constructor(partial: Partial<CommissionResponseDto>) {
-    Object.assign(this, partial);
+  static fromDto(dto: CommissionResponseDto): CommissionPresenter {
+    const presenter = new CommissionPresenter();
+    presenter.partnerId = dto.partnerId;
+    presenter.partnerName = dto.partnerName;
+    presenter.totalSales = dto.totalSales;
+    presenter.totalValue = dto.totalValue;
+    presenter.totalCommission = dto.totalCommission;
+    presenter.commissionRate = dto.commissionRate;
+    return presenter;
   }
 }
