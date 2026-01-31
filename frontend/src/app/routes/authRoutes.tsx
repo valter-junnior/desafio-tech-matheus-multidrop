@@ -1,6 +1,8 @@
 import { lazy } from "react";
 import { type RouteObject, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./protected-route";
+import { RoleProtectedRoute } from "./role-protected-route";
+import { RoleBasedRedirect } from "./role-based-redirect";
 import { MainLayout } from "../../layout/main-layout";
 
 const UsersListPage = lazy(() =>
@@ -62,47 +64,87 @@ export const authRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Navigate to="/users" replace />,
+        element: <RoleBasedRedirect />,
       },
       {
         path: "users",
-        element: <UsersListPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+            <UsersListPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "users/new",
-        element: <UserFormPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+            <UserFormPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "users/:id/edit",
-        element: <UserFormPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+            <UserFormPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "products",
-        element: <ProductsListPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN", "PARTNER", "CUSTOMER"]}>
+            <ProductsListPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "products/new",
-        element: <ProductFormPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN", "PARTNER", "CUSTOMER"]}>
+            <ProductFormPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "products/:id/edit",
-        element: <ProductFormPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN", "PARTNER", "CUSTOMER"]}>
+            <ProductFormPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "sales",
-        element: <SalesListPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN", "PARTNER"]}>
+            <SalesListPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "sales/new",
-        element: <SaleFormPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN", "PARTNER"]}>
+            <SaleFormPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "reports/sales",
-        element: <SalesReportPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+            <SalesReportPage />
+          </RoleProtectedRoute>
+        ),
       },
       {
         path: "reports/commissions",
-        element: <CommissionsReportPage />,
+        element: (
+          <RoleProtectedRoute allowedRoles={["ADMIN", "PARTNER"]}>
+            <CommissionsReportPage />
+          </RoleProtectedRoute>
+        ),
       },
     ],
   },

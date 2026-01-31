@@ -65,6 +65,13 @@ Para produção, seria interessante adicionar:
 - UUID v7 em vez de IDs sequenciais
 - Soft delete para auditoria
 
+**Frontend:**
+- Componente `DataTable` genérico para reutilização (evita duplicação de código nas listagens)
+- Layout responsivo para mobile
+- Testes E2E com Playwright
+- Skeleton loading states
+- Tratamento de erros mais robusto com boundary components
+
 ## Como Usar
 
 ### Backend
@@ -113,7 +120,12 @@ Cobertos: Partner, Product, Sale, User e Report Services.
 
 ## Endpoints
 
-Toda rotas são protegida
+obs: Algumas rotas do frontend não funcinam como edita e excluir já que não foram implementadas no backend.
+
+Toda rotas são protegida menos autenticação:
+
+**Auth:**
+- `POST /auth/generate-token`
 
 **Usuários:**
 - `POST /users`, `GET /users`, `GET /users/:id`

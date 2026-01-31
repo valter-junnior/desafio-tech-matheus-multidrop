@@ -13,21 +13,56 @@ export function MainLayout() {
     navigate("/login");
   };
 
-  const navigation = [
-    /* { name: "Dashboard", href: "/", icon: LayoutDashboard }, */
-    { name: "Usuários", href: "/users", icon: Users },
-    { name: "Produtos", href: "/products", icon: Package },
-    { name: "Vendas", href: "/sales", icon: ShoppingCart },
+  const allNavigation = [
+    /* { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["ADMIN", "PARTNER", "CUSTOMER"] }, */
+    { name: "Usuários", href: "/users", icon: Users, roles: ["ADMIN"] },
+    {
+      name: "Produtos",
+      href: "/products",
+      icon: Package,
+      roles: ["ADMIN", "PARTNER", "CUSTOMER"],
+    },
+    {
+      name: "Vendas",
+      href: "/sales",
+      icon: ShoppingCart,
+      roles: ["ADMIN", "PARTNER"],
+    },
     {
       name: "Relatórios",
       href: "/reports",
       icon: BarChart3,
+      roles: ["ADMIN", "PARTNER"],
       subItems: [
-        { name: "Vendas", href: "/reports/sales" },
-        { name: "Comissões", href: "/reports/commissions" },
+        { name: "Vendas", href: "/reports/sales", roles: ["ADMIN"] },
+        {
+          name: "Comissões",
+          href: "/reports/commissions",
+          roles: ["ADMIN", "PARTNER"],
+        },
       ],
     },
   ];
+
+  // Filtrar navegação baseado na role do usuário
+  const navigation = allNavigation
+    .filter((item) => !item.roles || item.roles.includes(user?.role || ""))
+    .map((item) => {
+      if (item.subItems) {
+        const filteredSubItems = item.subItems.filter(
+          (subItem) =>
+            !subItem.roles || subItem.roles.includes(user?.role || ""),
+        );
+
+        return {
+          ...item,
+          href:
+            filteredSubItems.length > 0 ? filteredSubItems[0].href : item.href,
+          subItems: filteredSubItems,
+        };
+      }
+      return item;
+    });
 
   return (
     <div className="min-h-screen bg-gray-100">
