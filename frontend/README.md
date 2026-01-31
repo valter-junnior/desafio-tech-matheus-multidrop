@@ -92,12 +92,6 @@ O aplicativo estará disponível em `http://localhost:5173`
 npm run build
 ```
 
-### Preview do Build
-
-```bash
-npm run preview
-```
-
 ## 🔐 Autenticação
 
 O sistema usa autenticação JWT. Na página de login, você pode:
@@ -105,8 +99,6 @@ O sistema usa autenticação JWT. Na página de login, você pode:
 1. Inserir um email qualquer
 2. Selecionar um perfil (Admin, Parceiro ou Cliente)
 3. Um token JWT será gerado automaticamente pelo backend
-
-O token e os dados do usuário são armazenados no localStorage.
 
 ## 📋 Funcionalidades
 
@@ -137,33 +129,3 @@ O token e os dados do usuário são armazenados no localStorage.
 ### Relatórios
 - **Relatório de Vendas**: Visualizar todas as vendas com detalhes
 - **Relatório de Comissões**: Ver comissões por parceiro
-
-## 🔧 Scripts Disponíveis
-
-- `npm run dev` - Inicia o servidor de desenvolvimento
-- `npm run build` - Cria o build de produção
-- `npm run preview` - Preview do build de produção
-- `npm run lint` - Executa o linter
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
