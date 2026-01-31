@@ -11,7 +11,9 @@ import { SaleMapper } from '../models/sale/sale.mapper';
 export class ReportRepositoryPrisma implements IReportRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getSalesReport(filters: SalesReportFilters): Promise<SalesReportResult> {
+  async getSalesReport(
+    filters: SalesReportFilters,
+  ): Promise<SalesReportResult> {
     const where: any = {};
 
     if (filters.startDate || filters.endDate) {
@@ -32,27 +34,9 @@ export class ReportRepositoryPrisma implements IReportRepository {
       this.prisma.sale.findMany({
         where,
         include: {
-          product: {
-            select: {
-              id: true,
-              name: true,
-              price: true,
-            },
-          },
-          customer: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-          partner: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
+          product: true,
+          customer: true,
+          partner: true,
         },
         orderBy: {
           createdAt: 'desc',

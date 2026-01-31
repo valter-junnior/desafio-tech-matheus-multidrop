@@ -33,6 +33,7 @@ services:
     volumes:
       - ./backend/src:/app/src
       - ./backend/test:/app/test
+      - ./backend/storage/logs:/app/storage/logs
       - /app/node_modules
     networks:
       - marketplace_network

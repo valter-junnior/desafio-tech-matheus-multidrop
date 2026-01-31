@@ -5,8 +5,32 @@ import * as path from 'path';
 
 const logDirectory = path.join(process.cwd(), 'storage', 'logs');
 
+// Filter to ignore NestJS bootstrap/system logs
+const ignoreNestSystemLogs = winston.format((info) => {
+  const systemContexts = [
+    'InstanceLoader',
+    'RoutesResolver',
+    'RouterExplorer',
+    'NestFactory',
+    'NestApplication',
+    'Bootstrap',
+  ];
+
+  // Ignore logs from these system contexts
+  if (
+    info.context &&
+    typeof info.context === 'string' &&
+    systemContexts.includes(info.context)
+  ) {
+    return false;
+  }
+
+  return info;
+});
+
 // Format for console output (colorized)
 const consoleFormat = winston.format.combine(
+  ignoreNestSystemLogs(),
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.colorize(),
   winston.format.printf(({ timestamp, level, message, context, trace }) => {
@@ -18,6 +42,7 @@ const consoleFormat = winston.format.combine(
 
 // Format for file output (JSON)
 const fileFormat = winston.format.combine(
+  ignoreNestSystemLogs(),
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.errors({ stack: true }),
   winston.format.json(),
@@ -44,17 +69,6 @@ const errorLogsTransport = new DailyRotateFile({
   format: fileFormat,
 });
 
-// Daily rotate file transport for combined logs (info and above)
-const combinedLogsTransport = new DailyRotateFile({
-  filename: path.join(logDirectory, 'combined-%DATE%.log'),
-  datePattern: 'YYYY-MM-DD',
-  zippedArchive: true,
-  maxSize: '20m',
-  maxFiles: '7d',
-  level: 'info',
-  format: fileFormat,
-});
-
 export const loggerConfig: WinstonModuleOptions = {
   level: process.env.LOG_LEVEL || 'info',
   transports: [
@@ -65,7 +79,6 @@ export const loggerConfig: WinstonModuleOptions = {
     // File transports
     allLogsTransport,
     errorLogsTransport,
-    combinedLogsTransport,
   ],
   // Exception handling
   exceptionHandlers: [
